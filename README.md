@@ -4,6 +4,7 @@ Exporting blender files very fast as a demo render or master export in my pipeli
 **Install just the .py file as an addon and dont be stupid about it**
 
 The N menu has a button, the dialog popup allows you to choose wheter you want to save incrementally before making a sweatbox video.
+If you are like me and don't like buttons, you can type in F3 and click `pipeline.demo_exporter_dialog > *Demo Exporter*` instead!
 
 folder structure:
 
