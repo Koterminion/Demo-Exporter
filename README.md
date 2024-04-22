@@ -14,5 +14,6 @@ Necessary folder structure:
 >>001.00_asset
 >>>Source
 >>>>001.00_asset_001.blend
+>>>>
 >>>Demo
 >>>>001.00_asset_001.mp4 (created file)
