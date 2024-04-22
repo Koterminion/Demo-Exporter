@@ -1,9 +1,9 @@
 bl_info = {
     "name": "Demo Exporter",
-    "author": "Hannah Ümit <twitter.com/HannahUmit>",
-    "version": (1,0),
-    "blender": (3, 0, 0),
-    "category": "Edit",
+    "author": "Hannah Fantasia <instagram.com/HannahFantasia>",
+    "version": (2,0),
+    "blender": (4, 1, 1),
+    "category": "Pipeline",
     "location": "3D Viewport",
     "description": "I made an export to Demo button for my pipeline. Comes in handy, saves minutes.",
     "warning": "",
@@ -11,18 +11,38 @@ bl_info = {
     "tracker_url": "",
 }
 
-
 import bpy
+import shutil
+import re
+import os
 from pathlib import Path
 
-def main(context):
-    for ob in context.scene.objects:
-        print(ob)
+class Dialog_DemoExporter(bpy.types.Operator):
+        """Open Dialog Box For Demo Exporter"""
+        bl_idname = "pipeline.demo_exporter_dialog"
+        bl_label = "Demo Exporter"
+        
+        ToggleIncrementalSave: bpy.props.BoolProperty(name = "Toggle Incremental Save", default = False)
+        
+        def execute(self,context):
+        
+            
+            bpy.ops.wm.save_mainfile(incremental=True) if self.ToggleIncrementalSave == True else print("Incremental Saving is off, current version will be overwritten")
+            bpy.ops.pipeline.demo_exporter()
+            
+                
+            
+            return {"FINISHED"}
+        
+        def invoke(self, context, event):
+            
+            return context.window_manager.invoke_props_dialog(self)
+    
 
 
 class DemoExport(bpy.types.Operator):
     """Tooltip"""
-    bl_idname = "object.demo_exporterr"
+    bl_idname = "pipeline.demo_exporter"
     bl_label = "Demo Exporter"
 
     @classmethod
@@ -30,7 +50,7 @@ class DemoExport(bpy.types.Operator):
         return context.active_object is not None
 
     def execute(self, context):
-
+        
         path = bpy.path.abspath("//").split("\\")
         filenumber = bpy.data.filepath.split("\\")
         path[-2] = 'Demo'
@@ -70,23 +90,42 @@ class DemoExport(bpy.types.Operator):
         bpy.context.scene.render.ffmpeg.audio_mixrate = 48000
 
         bpy.ops.render.opengl(animation=True)
-        bpy.context.space_data.overlay.show_overlays = False
+        bpy.context.space_data.overlay.show_overlays = True
+        
+        workpath = bpy.data.scenes["Scene"].render.filepath
+        workpath = workpath.split("\\")
+        workpath.pop(-2)
+        workpath[-1] = re.sub(r'\_\d+', '', workpath[-1])
+        workpath = '\\'.join(workpath)
+        
+        os.remove(workpath) if os.path.isfile(workpath) == True else print("Creating workfile")
+        shutil.copy(renderpath,workpath,follow_symlinks = True)
         return {'FINISHED'}
+    
+class Panel_Pipeline(bpy.types.Panel):
+    bl_space_type = 'VIEW_3D'
+    bl_region_type = 'UI'
+    bl_category = 'Pipeline'
+    bl_label = 'Panel Pipeline'
+    
+    def draw(self, context):
+        self.layout.operator("pipeline.demo_exporter_dialog")
 
-
-def menu_func(self, context):
-    self.layout.operator(DemoExport.bl_idname, text=DemoExport.bl_label)
 
 
 def register():
+    bpy.utils.register_class(Dialog_DemoExporter)
     bpy.utils.register_class(DemoExport)
-    bpy.types.VIEW3D_MT_object.append(menu_func)
+    bpy.utils.register_class(Panel_Pipeline)
 
 
 def unregister():
+    bpy.utils.unregister_class(Dialog_DemoExporter)
     bpy.utils.unregister_class(DemoExport)
-    bpy.types.VIEW3D_MT_object.remove(menu_func)
+    bpy.utils.unregister_class(Panel_Pipeline)
 
 
+if __name__ == "__main__":
+    register()
 if __name__ == "__main__":
     register()
