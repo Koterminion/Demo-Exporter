@@ -1,5 +1,5 @@
 # Exporter
-Exporting blender files very fast as a demo render or master export in my pipeline.
+Exporting blender files very fast as a demo render in my pipeline.
 
 **Install just the .py file as an addon and dont be stupid about it**
 
