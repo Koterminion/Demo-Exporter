@@ -14,7 +14,7 @@ folder structure:
 
 >Task
 >>001.00_asset
->>>001.00_asset.mp4 (created file based on latest version of the file inside Demo)
+>>>001.00_asset.mp4 (created file based on latest version of the file inside Demo, MAKE SURE THE FILE IS NOT IN USE BY ANOTHER SOFTWARE TO OVERWRITE IT.)
 >>>
 >>>Source
 >>>>001.00_asset_001.blend
